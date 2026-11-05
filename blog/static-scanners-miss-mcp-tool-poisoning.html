@@ -124,14 +124,31 @@
     <p>Treat a static tool-metadata scan as a cheap filter for careless attacks, not as a control. A careful attacker who writes documentation-style prose passes it.</p>
     <ul>
         <li><strong>Report external numbers.</strong> A detector's recall on its author's own attacks overstated real-world recall almost fourfold here (53.7% vs 14.0%). Ask any scanner vendor for results on a dataset they did not write.</li>
-        <li><strong>Enforce at runtime.</strong> What stops exfiltration is limiting what tools can receive and send: argument allow-lists, egress control, and confirmation for sensitive data. These do not depend on reading intent from prose.</li>
+        <li><strong>Enforce at runtime.</strong> What stops exfiltration is limiting what tools can receive and send: argument provenance and confirmation for sensitive sinks. I implemented and evaluated a runtime provenance guard (<code>aisec/runtime_guard.py</code>) against the <strong>AgentDojo</strong> benchmark (v1.2.2, 949 attack pairs):
+            <div class="table-wrap my-3">
+                <table>
+                    <thead>
+                        <tr><th>Suite</th><th class="num">Attacks stopped</th><th class="num">Recall (95% CI)</th><th class="num">Benign held</th><th class="num">Utility cost</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>banking</td><td class="num">143 / 144</td><td class="num"><strong>99.3%</strong></td><td class="num">2 / 16</td><td class="num">12.5%</td></tr>
+                        <tr><td>slack</td><td class="num">100 / 105</td><td class="num"><strong>95.2%</strong></td><td class="num">14 / 21</td><td class="num">66.7%</td></tr>
+                        <tr><td>travel</td><td class="num">59 / 140</td><td class="num">42.1%</td><td class="num">0 / 20</td><td class="num">0.0%</td></tr>
+                        <tr><td>workspace</td><td class="num">238 / 560</td><td class="num">42.5%</td><td class="num">6 / 40</td><td class="num">15.0%</td></tr>
+                        <tr><td><strong>Overall</strong></td><td class="num"><strong>540 / 949</strong></td><td class="num"><strong>56.9%</strong></td><td class="num"><strong>22 / 97</strong></td><td class="num"><strong>22.7%</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            It halts nearly all exfiltration and unauthorized actions in sensitive domains (banking 99.3%, Slack 95.2%) without reading prose intent. Full protocol in <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/GUARD_EVAL_PROTOCOL.md">GUARD_EVAL_PROTOCOL.md</a> and <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/STUDY.md">STUDY section 3f</a>.
+        </li>
         <li><strong>A semantic judge is the open question.</strong> An LLM that already understands instructions may read intent that n-grams cannot. It needs the same test: recall on attacks it was not tuned on, and its false-positive rate on thousands of real tool descriptions.</li>
     </ul>
     <p><strong>Method notes.</strong> Both external evaluations and the learned layer were pre-registered: the protocol was committed before the run, each test set was scored once, and deviations are recorded. MCP-Poison-Bench's payloads are built in Python, so they were read with <code>ast</code> rather than imported. My own held-out register has been evaluated several times and should be treated as partly seen. The negatives are presumed clean, not hand-checked one by one.</p>
 
     <h2>Sources and reproduction</h2>
     <ul>
-        <li><a href="https://github.com/Pyhroff/aisec-suite">aisec-suite</a> (<a href="https://pypi.org/project/aisec-suite/">PyPI 0.5.0</a>): detector, benchmarks and the full write-up in <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/STUDY.md">docs/STUDY.md</a>, sections 3c and 3d.</li>
+        <li><a href="https://github.com/Pyhroff/aisec-suite">aisec-suite</a> (<a href="https://pypi.org/project/aisec-suite/">PyPI 0.5.0</a>): detector, benchmarks and the full write-up in <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/STUDY.md">docs/STUDY.md</a>, sections 3c, 3d, 3e and 3f.</li>
+        <li><a href="https://github.com/debcaldas/AgentDojo">AgentDojo</a> (Debenedetti et al., NeurIPS 2024), PyPI <code>agentdojo==0.1.35</code>; protocol: <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/GUARD_EVAL_PROTOCOL.md">runtime guard evaluation</a>.</li>
         <li>Pre-registered protocols: <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/EXTERNAL_EVAL_PROTOCOL.md">external evaluation</a> and <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/SEMANTIC_LAYER_PROTOCOL.md">learned layer</a>.</li>
         <li><a href="https://github.com/zhiqiangwang4/MCPTox-Benchmark">MCPTox benchmark</a> (Wang et al., AAAI 2026), commit f85189f.</li>
         <li><a href="https://github.com/chirag-dewan/MCP-Poison-Bench">MCP-Poison-Bench</a> (Dewan, MIT licence), commit 944ccbb.</li>
