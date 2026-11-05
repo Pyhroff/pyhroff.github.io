@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praising Harris Ratnam (@Pyhroff) | Application & AI Security</title>
-    <meta name="description" content="Cybersecurity undergraduate (IIIT Kottayam, 2028) building and measuring static scanners for AI-agent inputs. 4 upstream PRs merged in SQLGlot, SQLFluff and LiteLLM; 4 packages on PyPI.">
+    <meta name="description" content="Cybersecurity undergraduate (IIIT Kottayam, 2028) building and measuring static scanners for AI-agent inputs. 5 upstream PRs merged in SQLGlot, SQLFluff and LiteLLM; 4 packages on PyPI.">
     
     <!-- Open Graph -->
     <meta property="og:title" content="Praising Harris Ratnam (@Pyhroff): Application & AI Security">
-    <meta property="og:description" content="Static scanners for MCP tool metadata, agent memory and RAG documents, measured on 135 public repos. 4 merged upstream PRs, 12 open. Looking for Summer 2027 internships.">
+    <meta property="og:description" content="Static scanners for MCP tool metadata, agent memory and RAG documents, measured on 135 public repos. 5 merged upstream PRs, 16 open. Looking for Summer 2027 internships.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pyhroff.github.io">
 
@@ -105,11 +105,11 @@
 
             <div class="mt-10 grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl">
                 <div class="p-4 rounded-xl bg-surface border border-borderSubtle">
-                    <div class="text-2xl font-bold font-mono text-emerald-400">4</div>
-                    <div class="text-xs text-gray-400 mt-1">Upstream PRs merged &amp; released</div>
+                    <div class="text-2xl font-bold font-mono text-emerald-400">5</div>
+                    <div class="text-xs text-gray-400 mt-1">Upstream PRs merged</div>
                 </div>
                 <div class="p-4 rounded-xl bg-surface border border-borderSubtle">
-                    <div class="text-2xl font-bold font-mono text-primaryCyan">12</div>
+                    <div class="text-2xl font-bold font-mono text-primaryCyan">16</div>
                     <div class="text-xs text-gray-400 mt-1">Upstream PRs open, in review</div>
                 </div>
                 <div class="p-4 rounded-xl bg-surface border border-borderSubtle">
@@ -150,7 +150,7 @@
                             <a href="https://github.com/Pyhroff/aisec-suite" target="_blank" rel="noopener" class="text-gray-400 hover:text-white" aria-label="aisec-suite on GitHub">↗</a>
                         </div>
                         <h3 class="text-xl font-bold text-white">aisec-suite</h3>
-                        <p class="text-sm text-gray-400 mt-2">CI security gate for the inputs AI agents trust: MCP tool metadata, agent memory files and RAG documents. One <code>aisec scan</code> with SARIF output and a reusable GitHub Action. Its structural tool-poisoning detector catches 48.1% of 54 held-out synthetic attacks (a naive regex caught 0%), with 1 false positive in 3,974 real tool descriptions.</p>
+                        <p class="text-sm text-gray-400 mt-2">CI security gate for the inputs AI agents trust: MCP tool metadata, agent memory files and RAG documents. One <code>aisec scan</code> with SARIF output and a reusable GitHub Action. Its structural tool-poisoning detector catches 53.7% of 54 held-out synthetic attacks (a naive regex caught 0%), with 2 false positives in 3,974 real tool descriptions, and survives look-alike-letter and encoding obfuscation (current source; the 0.4.0 PyPI release scores 48.1% with 1 false positive).</p>
                     </div>
                     <div class="mt-6 pt-4 border-t border-borderSubtle flex items-center justify-between gap-3 text-xs font-mono text-gray-400">
                         <span>Python · SARIF · GitHub Actions</span>
@@ -242,7 +242,7 @@
             <div class="mb-10">
                 <span class="text-xs font-mono text-primaryCyan uppercase tracking-widest">Open Source</span>
                 <h2 class="text-3xl font-bold text-white mt-2">Upstream pull requests</h2>
-                <p class="text-gray-400 mt-2">4 merged and released, the rest open and in review. Statuses checked 3 Nov 2026; click through for the live state.</p>
+                <p class="text-gray-400 mt-2">5 merged, the rest open and in review. Statuses checked 4 Nov 2026; click through for the live state.</p>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm border border-borderSubtle rounded-xl overflow-hidden">
@@ -274,6 +274,12 @@
                             <td class="py-3 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-mono bg-emerald-950 text-emerald-300 border border-emerald-800">Merged</span></td>
                         </tr>
                         <tr class="hover:bg-surfaceRaised/50 align-top">
+                            <td class="py-3 px-4 font-semibold text-white whitespace-nowrap">sqlfluff / SQLFluff</td>
+                            <td class="py-3 px-4 font-mono text-emerald-400 whitespace-nowrap"><a href="https://github.com/sqlfluff/sqlfluff/pull/8899" target="_blank" rel="noopener" class="underline">#8899</a></td>
+                            <td class="py-3 px-4 text-gray-300">Use <code>CommaSegment</code> in the StarRocks fixed-range partition grammar.</td>
+                            <td class="py-3 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-mono bg-emerald-950 text-emerald-300 border border-emerald-800">Merged</span></td>
+                        </tr>
+                        <tr class="hover:bg-surfaceRaised/50 align-top">
                             <td class="py-3 px-4 font-semibold text-white whitespace-nowrap">BerriAI / LiteLLM</td>
                             <td class="py-3 px-4 font-mono text-emerald-400 whitespace-nowrap"><a href="https://github.com/BerriAI/litellm/pull/47091" target="_blank" rel="noopener" class="underline">#47091</a></td>
                             <td class="py-3 px-4 text-gray-300">Wrap a string <code>stop</code> into a one-element list for Cohere <code>stop_sequences</code>, which the Cohere API rejected as a plain string.</td>
@@ -282,7 +288,7 @@
                         <tr class="hover:bg-surfaceRaised/50 align-top">
                             <td class="py-3 px-4 font-semibold text-white whitespace-nowrap">BerriAI / LiteLLM</td>
                             <td class="py-3 px-4 font-mono text-cyan-400 whitespace-nowrap"><a href="https://github.com/BerriAI/litellm/pull/47105" target="_blank" rel="noopener" class="underline">#47105</a></td>
-                            <td class="py-3 px-4 text-gray-300">Authorization fix: keys and teams with access groups but <code>models: []</code> were allowed every model. Access groups are now enforced up front and fail closed (issue #46951). Related: #47106, #47107.</td>
+                            <td class="py-3 px-4 text-gray-300">Authorization fix: keys and teams with access groups but <code>models: []</code> were allowed every model. Access groups are now enforced up front and fail closed (issue #46951). Related: #47106, #47107, #47311 (budget authorization), #47312 (scope MCP access groups to the caller).</td>
                             <td class="py-3 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">Open, in review</span></td>
                         </tr>
                         <tr class="hover:bg-surfaceRaised/50 align-top">
@@ -318,7 +324,13 @@
                         <tr class="hover:bg-surfaceRaised/50 align-top">
                             <td class="py-3 px-4 font-semibold text-white whitespace-nowrap">quantumlib / Qualtran</td>
                             <td class="py-3 px-4 font-mono text-cyan-400 whitespace-nowrap"><a href="https://github.com/quantumlib/Qualtran/pull/1986" target="_blank" rel="noopener" class="underline">#1986</a></td>
-                            <td class="py-3 px-4 text-gray-300">Fix the CNOT count in <code>Add.build_call_graph</code> for registers of unequal bit size.</td>
+                            <td class="py-3 px-4 text-gray-300">Fix the CNOT count in <code>Add.build_call_graph</code> for registers of unequal bit size. Also #1988 (<code>MeasureX.as_cirq_op</code>).</td>
+                            <td class="py-3 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">Open, in review</span></td>
+                        </tr>
+                        <tr class="hover:bg-surfaceRaised/50 align-top">
+                            <td class="py-3 px-4 font-semibold text-white whitespace-nowrap">data-privacy-stack / Presidio</td>
+                            <td class="py-3 px-4 font-mono text-cyan-400 whitespace-nowrap"><a href="https://github.com/data-privacy-stack/presidio/pull/2418" target="_blank" rel="noopener" class="underline">#2418</a></td>
+                            <td class="py-3 px-4 text-gray-300">Docs: correct the container port in the source-build install instructions.</td>
                             <td class="py-3 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">Open, in review</span></td>
                         </tr>
                     </tbody>
