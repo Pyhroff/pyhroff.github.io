@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP tool-poisoning detector playground | Praising Harris Ratnam</title>
+<meta name="description" content="Paste an MCP tool definition and see what a structural tool-poisoning detector makes of it. Runs entirely in your browser; includes an example it misses.">
+<meta property="og:title" content="MCP tool-poisoning detector playground">
+<meta property="og:description" content="A static detector for tool poisoning in MCP tool metadata, running in your browser with Pyodide. Shows what it catches and what it misses.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pyhroff.github.io/playground/">
+<style>
+  :root {
+    --bg: #0B0F17; --surface: #111827; --raised: #1E293B; --line: #1F2937; --line2: #374151;
+    --text: #F3F4F6; --muted: #9CA3AF; --cyan: #06B6D4; --green: #34D399; --amber: #FBBF24; --red: #F87171;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  a { color: var(--cyan); }
+  code, pre, textarea { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  header.top { border-bottom: 1px solid var(--line); background: rgba(11,15,23,.92); position: sticky; top: 0; z-index: 5; }
+  header.top .wrap { display: flex; justify-content: space-between; align-items: center; height: 56px; gap: 12px; }
+  header.top a { text-decoration: none; font-size: 14px; }
+  .brand { color: var(--text); font-weight: 700; font-family: ui-monospace, monospace; }
+  .brand span { color: var(--cyan); }
+  h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.2; margin: 32px 0 8px; }
+  .lead { color: var(--muted); max-width: 70ch; margin: 0 0 20px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .notice { border-left: 3px solid var(--amber); }
+  .notice strong { color: var(--amber); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .chip { background: var(--raised); color: var(--text); border: 1px solid var(--line2); border-radius: 999px; padding: 6px 12px; font-size: 14px; cursor: pointer; }
+  .chip:hover { border-color: var(--cyan); }
+  .chip[aria-pressed="true"] { border-color: var(--cyan); background: #0b2a33; }
+  .chip small { color: var(--muted); margin-left: 6px; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 860px) { .grid { grid-template-columns: 1.1fr .9fr; } }
+  label.h { display: block; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  textarea { width: 100%; min-height: 330px; background: #0d121d; color: var(--text); border: 1px solid var(--line2); border-radius: 8px; padding: 12px; font-size: 13px; line-height: 1.5; resize: vertical; }
+  textarea:focus-visible, .chip:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .note { color: var(--muted); font-size: 14px; margin: 8px 0 0; min-height: 3.2em; }
+  .verdict { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .badge { font-weight: 700; padding: 4px 12px; border-radius: 8px; font-size: 14px; letter-spacing: .03em; }
+  .badge.high { background: #3b1414; color: var(--red); border: 1px solid #7f1d1d; }
+  .badge.medium { background: #3a2a0b; color: var(--amber); border: 1px solid #854d0e; }
+  .badge.none { background: #0d2f23; color: var(--green); border: 1px solid #14532d; }
+  .score { font-family: ui-monospace, monospace; color: var(--muted); }
+  .meter { position: relative; height: 10px; background: var(--raised); border-radius: 6px; margin: 16px 0 26px; }
+  .meter .fill { position: absolute; inset: 0 auto 0 0; border-radius: 6px; background: var(--cyan); }
+  .meter .tick { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--muted); }
+  .meter .tick span { position: absolute; top: 18px; transform: translateX(-50%); font-size: 11px; color: var(--muted); white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  ul.f { margin: 0; padding-left: 18px; }
+  pre.view { background: #0d121d; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-size: 12px; white-space: pre-wrap; word-break: break-word; margin: 6px 0; }
+  .status { color: var(--muted); font-size: 14px; }
+  .status.err { color: var(--red); }
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--line2); border-top-color: var(--cyan); border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -1px; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+  h2 { font-size: 1.05rem; margin: 18px 0 6px; }
+  footer { color: var(--muted); font-size: 14px; padding: 28px 0 48px; }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><span>&gt;_</span> Pyhroff</a>
+    <a href="../">← Back to portfolio</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>MCP tool-poisoning detector</h1>
+  <p class="lead">Paste a tool definition (as JSON) and see how the structural detector from
+    <a href="https://github.com/Pyhroff/aisec-suite">aisec-suite</a> scores it. Everything runs in your browser using
+    <a href="https://pyodide.org">Pyodide</a>; nothing you paste is sent anywhere.</p>
+
+  <div class="card notice" role="note">
+    <strong>What this is, and is not.</strong> It is a review aid. On attacks I wrote, held out from development, it finds
+    53.7%; on attacks written by other researchers it finds 14.0%; it flagged 2 of 3,974 real tool descriptions (0.05%).
+    It does not catch attacks phrased as ordinary documentation (see the "missed" example). A clean result is not a
+    safety guarantee. Method and caveats:
+    <a href="https://github.com/Pyhroff/aisec-suite/blob/master/docs/STUDY.md">the study</a> and
+    <a href="../blog/static-scanners-miss-mcp-tool-poisoning.html">the write-up</a>.
+  </div>
+
+  <div class="row" id="examples" role="group" aria-label="Examples"></div>
+
+  <div class="grid">
+    <section aria-labelledby="in-h">
+      <label class="h" id="in-h" for="input">Tool definition (JSON)</label>
+      <textarea id="input" spellcheck="false" autocomplete="off" aria-describedby="note"></textarea>
+      <p class="note" id="note"></p>
+      <p class="status" id="status" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span>Loading Python in your browser (about 10 MB, cached after the first visit)…</p>
+      <noscript><p class="status err">This page needs JavaScript. To try the detector without it: <code>pip install aisec-suite</code>.</p></noscript>
+    </section>
+
+    <section aria-labelledby="out-h" class="card">
+      <h2 id="out-h" style="margin-top:0">Result</h2>
+      <div id="result" aria-live="polite"><p class="muted">Choose an example or paste a tool to begin.</p></div>
+    </section>
+  </div>
+
+  <footer>
+    <p>The detector is <a href="https://github.com/Pyhroff/aisec-suite/blob/master/aisec/poison.py"><code>aisec/poison.py</code></a>
+      (standard library only), copied unmodified apart from removing its package import into
+      <a href="poison.py"><code>playground/poison.py</code></a>. The scoring is explained in that file's docstring.
+      Accepts MCP's <code>inputSchema</code> or <code>input_schema</code>. Input is limited to 20,000 characters.</p>
+    <p>Python is loaded from the jsDelivr CDN (Pyodide 0.27.7). If it cannot load, install the tool instead:
+      <code>pip install "aisec-suite[core]"</code>.</p>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<script>
+"use strict";
+const FEATURES = {
+  conceal: "asks to hide something from the user",
+  tag: "uses an instruction tag (such as <IMPORTANT>)",
+  sensitive: "mentions secrets or sensitive files",
+  data_flow: "routes data into a parameter, URL or address",
+  model_directed: "talks to the model rather than describing the tool",
+  cross_tool: "reaches beyond this tool (other tools, all calls)",
+  override: "overrides the user or earlier rules"
+};
+const $ = (id) => document.getElementById(id);
+let analyze = null, examples = [], current = null, timer = null;
+
+function el(tag, props, ...kids) {
+  const n = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) { if (k === "class") n.className = v; else n.setAttribute(k, v); }
+  for (const k of kids) n.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  return n;
+}
+function featureLabel(f) {
+  if (f.startsWith("hidden:")) return "hidden content (" + f.slice(7).replace(/\+/g, ", ") + ")";
+  return FEATURES[f] || f;
+}
+function setStatus(msg, isErr, spin) {
+  const s = $("status");
+  s.className = "status" + (isErr ? " err" : "");
+  s.replaceChildren(...(spin ? [el("span", { class: "spinner", "aria-hidden": "true" })] : []), document.createTextNode(msg));
+}
+
+function render(r) {
+  const box = $("result");
+  if (r.error) { box.replaceChildren(el("p", { class: "status err" }, r.error)); return; }
+  const label = r.severity === "high" ? "Flagged: HIGH" : r.severity === "medium" ? "Flagged: MEDIUM" : "No finding";
+  const max = Math.max(r.thresholds.high * 1.5, r.score * 1.1);
+  const pct = (v) => Math.min(100, (v / max) * 100) + "%";
+  const meter = el("div", { class: "meter", role: "img", "aria-label": "Score " + r.score + " on a scale with medium threshold " + r.thresholds.medium + " and high threshold " + r.thresholds.high });
+  const fill = el("div", { class: "fill" }); fill.style.width = pct(r.score);
+  meter.append(fill);
+  for (const [name, v] of [["medium " + r.thresholds.medium, r.thresholds.medium], ["high " + r.thresholds.high, r.thresholds.high]]) {
+    const t = el("div", { class: "tick" }, el("span", null, name)); t.style.left = pct(v); meter.append(t);
+  }
+  const out = [
+    el("div", { class: "verdict" }, el("span", { class: "badge " + (r.severity || "none") }, label), el("span", { class: "score" }, "score " + r.score)),
+    meter
+  ];
+  if (r.parts.length) {
+    const rows = r.parts.map(p => el("tr", null,
+      el("td", null, el("code", null, p.where)),
+      el("td", null, String(p.score)),
+      el("td", null, p.features.length ? el("ul", { class: "f" }, ...p.features.map(f => el("li", null, featureLabel(f)))) : el("span", { class: "muted" }, "nothing notable"))));
+    out.push(el("h2", null, "Where the score comes from"),
+      el("table", null, el("thead", null, el("tr", null, el("th", null, "Part"), el("th", null, "Score"), el("th", null, "Signals"))), el("tbody", null, ...rows)));
+  }
+  if (r.decoded_views.length) {
+    out.push(el("h2", null, "Hidden text the detector recovered"),
+      el("p", { class: "muted" }, "Invisible characters are shown as <U+XXXX> codes."),
+      ...r.decoded_views.map(v => el("pre", { class: "view" }, v)));
+  }
+  box.replaceChildren(...out);
+}
+
+function run() {
+  if (!analyze) return;
+  const raw = $("input").value;
+  if (!raw.trim()) { $("result").replaceChildren(el("p", { class: "muted" }, "Choose an example or paste a tool to begin.")); return; }
+  try { render(analyze(raw)); } catch (e) { render({ error: "Analysis failed: " + e }); }
+}
+
+function choose(ex) {
+  current = ex;
+  $("input").value = JSON.stringify(ex.tool, null, 2);
+  $("note").textContent = ex.note;
+  document.querySelectorAll("#examples .chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.id === ex.id)));
+  run();
+}
+
+async function boot() {
+  try {
+    const exRes = await fetch("examples.json");
+    examples = await exRes.json();
+    const holder = $("examples");
+    for (const ex of examples) {
+      const b = el("button", { type: "button", class: "chip", "data-id": ex.id, "aria-pressed": "false" }, ex.label, el("small", null, ex.kind));
+      b.addEventListener("click", () => choose(ex));
+      holder.append(b);
+    }
+    choose(examples[1]);
+  } catch (e) { setStatus("Could not load the examples: " + e, true); }
+
+  try {
+    if (typeof loadPyodide !== "function") throw new Error("the Pyodide script did not load");
+    const pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/" });
+    for (const f of ["poison.py", "glue.py"]) {
+      const text = await (await fetch(f)).text();
+      pyodide.FS.writeFile("/home/pyodide/" + f, text);
+    }
+    pyodide.runPython("import sys\nsys.path.insert(0, '/home/pyodide')\nimport glue");
+    const fn = pyodide.pyimport("glue").analyze;
+    analyze = (raw) => JSON.parse(fn(raw));
+    setStatus("Ready. Edit the JSON to try your own tool.");
+    run();
+  } catch (e) {
+    setStatus("Could not start Python in the browser (" + e + "). Install the tool instead: pip install \"aisec-suite[core]\"", true);
+  }
+}
+
+$("input").addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(run, 300); });
+boot();
+</script>
+</body>
+</html>

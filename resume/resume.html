@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Praising Harris Ratnam - Resume</title>
+<style>
+  @page { size: A4; margin: 9mm 12mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Liberation Sans", Arial, Helvetica, sans-serif; font-size: 8.7pt; line-height: 1.3; color: #111; }
+  h1 { font-size: 20pt; margin: 0; letter-spacing: .02em; line-height: 1.1; }
+  .role { font-size: 10pt; margin: 2px 0 3px; color: #0b5f73; font-weight: 600; }
+  .contact { font-size: 8.4pt; color: #222; }
+  .contact a, .links a { color: #0b5f73; text-decoration: none; }
+  h2 { font-size: 9pt; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid #222; margin: 6px 0 2px; padding-bottom: 1px; }
+  p { margin: 0 0 2px; }
+  .item { margin: 0 0 4px; }
+  .head { display: flex; justify-content: space-between; gap: 10px; }
+  .head b { font-weight: 700; }
+  .head span.r { white-space: nowrap; color: #333; }
+  .sub { color: #333; font-style: italic; }
+  ul { margin: 1px 0 0; padding-left: 14px; }
+  li { margin: 0 0 1px; }
+  .skills p { margin: 0 0 1px; display: grid; grid-template-columns: 70px 1fr; column-gap: 6px; }
+</style>
+</head>
+<body>
+<h1>PRAISING HARRIS RATNAM</h1>
+<div class="role">AI Security Engineer &middot; AI Engineer &mdash; Python</div>
+<div class="contact">9597691821 &nbsp;|&nbsp; praisingharris@gmail.com &nbsp;|&nbsp; <a href="https://github.com/Pyhroff">github.com/Pyhroff</a> &nbsp;|&nbsp; <a href="https://pyhroff.github.io">pyhroff.github.io</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/praising-harris-8a3320330">linkedin.com/in/praising-harris-8a3320330</a> &nbsp;|&nbsp; <a href="https://tryhackme.com/p/Pyhroff">tryhackme.com/p/Pyhroff</a></div>
+
+<h2>Summary</h2>
+<p>Computer science undergraduate with a cybersecurity background who builds security tooling for LLM agents, and the agent and distributed systems themselves, in Python. 7 merged upstream pull requests and 4 PyPI packages. Measures what the tools miss and reports false-positive rates and negative results next to the headline numbers.</p>
+
+<h2>Education</h2>
+<div class="head"><span><b>Indian Institute of Information Technology, Kottayam</b> &mdash; B.Tech Computer Science &amp; Engineering (Cybersecurity)</span><span class="r">2024 &ndash; 2028 (expected) &nbsp;|&nbsp; CGPA 7.9</span></div>
+
+<h2>Experience</h2>
+<div class="item"><div class="head"><span><b>VAPT Intern (Remote)</b>, Cyberops</span><span class="r">Jul 2026 &ndash; Oct 2026</span></div>
+<ul><li>Completed assigned vulnerability assessment and penetration testing training covering Burp Suite, Nmap and the OWASP Top 10, practised on TryHackMe and HackTheBox machines.</li></ul></div>
+
+<h2>Projects</h2>
+<div class="item"><div class="head"><span><b>aisec-suite</b> &mdash; CI security gate for what AI agents trust (MCP tool metadata, agent memory files, RAG documents)</span><span class="r">PyPI 0.11.0</span></div>
+<div class="sub">Python &middot; AST analysis &middot; SARIF &middot; GitHub Actions &middot; github.com/Pyhroff/aisec-suite</div>
+<ul>
+<li>Built a structural tool-poisoning detector (decodes hidden Unicode, base64, hex, rot13; scores instruction-like structure): 53.7% recall on held-out attacks, 14.0% on attacks written by other researchers (MCPTox, MCP-Poison-Bench), 0.05% false positives on 3,974 real tool descriptions. Documented that it misses documentation-phrased attacks and that a learned classifier did not fix this (pre-registered negative result).</li>
+<li>Added reachability analysis, baselines for CI that fail only on new findings, a reusable GitHub Action, and a runtime provenance guard that stops 56.9% of AgentDojo attacks while holding 22.7% of benign tasks for confirmation. Published 4 packages to PyPI (aisec-suite, pyhroff-mcpaudit, memsentry, pyhroff-ragsentry).</li>
+</ul></div>
+
+<div class="item"><div class="head"><span><b>MCP scan study + mcpaudit</b> &mdash; hand-labelled evaluation of 135 public MCP-server repositories</span><span class="r">github.com/Pyhroff/mcp-scan-study</span></div>
+<ul><li>Found no genuine tool poisoning in the wild; measured that mcpaudit's HIGH scope findings were right only 37.5% of the time, rewrote the rule, and re-measured on a held-out sample (64.3%) and on a blind-labelled fresh corpus (40% to 72.7%, all 16 accurate findings kept). Reported confidence intervals and the study's limits.</li></ul></div>
+
+<div class="item"><div class="head"><span><b>Kronos-KV</b> &mdash; replicated key-value store on Raft over TCP, pure Python (stdlib only)</span><span class="r">github.com/Pyhroff/kronos-kv</span></div>
+<div class="sub">Python &middot; asyncio &middot; Raft &middot; write-ahead log &middot; Hypothesis</div>
+<ul><li>Built durable Raft nodes (term, vote and log fsynced before replying) driving a crash-safe log-structured engine. Property-based testing found a Raft safety bug (a leader could commit an entry held by fewer than a majority) that I fixed; crash-injection at every WAL byte offset fixed a recovery bug. Verified with chaos runs (leader crashes, partitions) checked by a linearizability checker I wrote.</li></ul></div>
+
+<div class="item"><div class="head"><span><b>SOC Parallax</b> &mdash; behavioural detection platform</span><span class="r">github.com/Pyhroff/soc-parallax</span></div>
+<div class="sub">Python &middot; FastAPI &middot; PostgreSQL &middot; Neo4j &middot; LangGraph &middot; Next.js &middot; Ollama</div>
+<ul><li>Per-entity baselines, an attributable risk score, MITRE ATT&amp;CK mapping from a versioned rulebook (not LLM output), and a grounding guard that blocks narratives citing anything absent from the evidence. On 278 real EVTX attack samples, 29.5% reach medium severity or higher; nothing reaches high on held-out benign data. Replaced an earlier inflated 53% figure after auditing it.</li></ul></div>
+
+<div class="item"><div class="head"><span><b>OSIRIS</b> &mdash; model-agnostic AI assistant runtime (used daily)</span><span class="r">github.com/Pyhroff/osiris</span></div>
+<ul><li>8 LLM providers behind one failover router, 9 tool-scoped agents, embedding memory, 100 offline tests. Traced a local-model slowdown to Ollama's thinking mode and fixed it with a native adapter (about 100 s to 10 s per call, measured).</li></ul></div>
+
+<h2>Open source</h2>
+<div class="item"><div class="head"><span><b>7 pull requests merged, 13 open</b> (13 Nov 2026): SQLGlot, SQLFluff, LiteLLM, FastMCP, CrewAI, PennyLane, Qualtran</span><span class="r">pyhroff.github.io/#upstream</span></div>
+<ul>
+<li><b>Merged:</b> SQLGlot #8780 (lambda transpilation mutated a shared AST node); FastMCP #6063 (sandbox time limit ignored host callbacks); LiteLLM #47091; SQLFluff #8899, #8901, #8902, #9059. <b>Open:</b> LiteLLM #47105 (empty model list fell back to access to every model); CrewAI #8240.</li>
+</ul></div>
+
+<h2>Skills</h2>
+<div class="skills">
+<p><b>Languages</b> Python (asyncio, FastAPI, pytest, Hypothesis, AST analysis), SQL, Bash</p>
+<p><b>AI / LLM</b> Tool-calling agents, provider routing and failover, RAG and embeddings, evaluation harnesses, local models (Ollama), MCP, LLM red-teaming (PAIR, TAP, Crescendo)</p>
+<p><b>Security</b> Prompt injection and tool poisoning, MITRE ATT&amp;CK / ATLAS, Sigma, SARIF, STRIDE threat modelling, Burp Suite, Nmap, OWASP Top 10 (web and LLM)</p>
+<p><b>Systems</b> Raft consensus, write-ahead logging, property-based and crash-injection testing, Docker, GitHub Actions, PostgreSQL, Neo4j</p>
+</div>
+
+<h2>Certifications, writing &amp; hackathons</h2>
+<ul>
+<li>TryHackMe: AI Security path (Jun 2026) and Pre-Security path; top 2% globally, 177 rooms. Fortinet NSE 1.</li>
+<li>Writing: <i>Static scanners miss most MCP tool poisoning</i> (pyhroff.github.io/blog); articles on agent and AI security on Medium.</li>
+<li>Hackathons: PSBs Hackathon 2026 &mdash; PhantomGrid, behavioural-biometric authentication (team of 3; led security, tests, threat model); USAII Global AI Hackathon 2026 &mdash; Lucid, housing-support assistant.</li>
+</ul>
+</body>
+</html>
